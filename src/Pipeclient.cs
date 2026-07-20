@@ -21,7 +21,7 @@ public class PipeClient
     {
         _pipe = new NamedPipeClientStream(
             ".",
-            "MessagePipe",
+            "TartaMessagePipe",
             PipeDirection.InOut,
             PipeOptions.Asynchronous);
 
@@ -37,8 +37,12 @@ public class PipeClient
         using var reader = new StreamReader(_pipe);
         while (true)
         {
-            var recievedLine = await reader.ReadLineAsync();
 
+            var recievedLine = await reader.ReadLineAsync();
+            if (recievedLine == null)
+            {
+                continue;
+            }
             try
             {
                 // Extracting the message propertier and putting them into an object
